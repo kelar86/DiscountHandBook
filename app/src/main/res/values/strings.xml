@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DiscountHandBook</string>
+    <string name="list_is_empty">List is Empty</string>
 </resources>
