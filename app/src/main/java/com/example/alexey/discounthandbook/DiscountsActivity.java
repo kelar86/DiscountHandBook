@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 public class DiscountsActivity extends ListActivity implements AdapterView.OnItemLongClickListener {
 
-
-
     final String[] discountsRep = new String[] {"10%", "20%", "30%", "25%", "15%"};
     private ArrayAdapter<String> mDiscountAdapter;
     private String discout;
