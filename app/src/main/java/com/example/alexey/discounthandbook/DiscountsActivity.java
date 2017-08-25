@@ -2,20 +2,14 @@ package com.example.alexey.discounthandbook;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
-
 import com.example.alexey.discounthandbook.data.CardHolders;
 import com.example.alexey.discounthandbook.data.CardHoldersDBHelper;
 

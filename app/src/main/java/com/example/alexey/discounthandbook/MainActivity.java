@@ -12,11 +12,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
 import com.example.alexey.discounthandbook.data.CardHolders;
 import com.example.alexey.discounthandbook.data.CardHoldersDBHelper;
 
-import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     final int MENU_EDIT = 0;

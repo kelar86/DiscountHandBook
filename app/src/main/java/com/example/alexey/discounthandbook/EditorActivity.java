@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -85,8 +84,6 @@ public class EditorActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
     public void addCardHolder() {
         ContentValues cvNames = new ContentValues();
