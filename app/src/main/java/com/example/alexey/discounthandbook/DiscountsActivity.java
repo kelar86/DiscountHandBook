@@ -1,8 +1,11 @@
 package com.example.alexey.discounthandbook;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
@@ -10,49 +13,67 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+
+import com.example.alexey.discounthandbook.data.CardHolders;
+import com.example.alexey.discounthandbook.data.CardHoldersDBHelper;
 
 /**
  * Created by alexey on 23.08.17.
  */
 
-public class DiscountsActivity extends ListActivity implements AdapterView.OnItemLongClickListener {
+public class DiscountsActivity extends Activity {
 
-    final String[] discountsRep = new String[] {"10%", "20%", "30%", "25%", "15%"};
-    private ArrayAdapter<String> mDiscountAdapter;
-    private String discout;
-    private String client;
+    SimpleCursorAdapter mDiscountAdapter;
+    ListView discountList;
+
+    CardHoldersDBHelper dbHelper;
+    SQLiteDatabase db;
+    Cursor cursor;
+
+    private long clientID;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-        client = intent.getStringExtra("client");
-        mDiscountAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, discountsRep);
+        setContentView(R.layout.activity_discount);
 
 
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        Intent intent = getIntent();
+        clientID = intent.getLongExtra("clientID", 0);
 
-        setListAdapter(mDiscountAdapter);
-        setContentView(R.layout.activity_discount);
+        discountList = (ListView)findViewById(R.id.list);
+
+        dbHelper = new CardHoldersDBHelper(this);
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        return false;
-    }
+    protected void onResume() {
+        super.onResume();
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        discout = (String) l.getItemAtPosition(position);
-        Toast.makeText(getBaseContext(), client + ": " + discout,
-                Toast.LENGTH_LONG).show();
+        db = dbHelper.getReadableDatabase();
+
+        String q = "select * from "+ CardHolders.DB.TABLE_DISCOUNT_SIZE
+                + " WHERE _id = " + clientID;
+        cursor =  db.rawQuery(q, null);
+
+        String[] discountActivityList = new String[] {
+                CardHolders.DB.DISCOUNT_REASON,
+                CardHolders.DB.COLUMN_DISCOUNT};
+
+
+        mDiscountAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.two_line_list_item,
+                cursor,
+                discountActivityList,
+                new int[]{android.R.id.text1, android.R.id.text2}, 0);
+
+        discountList.setAdapter(mDiscountAdapter);
 
     }
 
@@ -65,5 +86,12 @@ public class DiscountsActivity extends ListActivity implements AdapterView.OnIte
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        db.close();
+        cursor.close();
     }
 }

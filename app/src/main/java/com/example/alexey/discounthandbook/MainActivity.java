@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 
         cursor =  db.rawQuery("select * from "+ CardHolders.DB.TABLE_NAME, null);
 
-        String[] mainActivityList = new String[] {CardHolders.DB.COLUMN_CARD_NUMBER, CardHolders.DB.COLUMN_NAME};;
+        String[] mainActivityList = new String[] {CardHolders.DB.COLUMN_CARD_NUMBER, CardHolders.DB.COLUMN_NAME};
 
         mClientAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.two_line_list_item,
@@ -76,17 +76,22 @@ public class MainActivity extends Activity {
         menu.add(0, MENU_DELETE, 0, R.string.delete_record);
     }
 
-
-
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         long id = cursor.getLong(cursor.getColumnIndex("_id"));
         switch (item.getItemId()){
             case MENU_EDIT:
-//                  Toast.makeText(getApplication(), " " + id, Toast.LENGTH_LONG).show();
-
+                Intent intent = getIntent().setClass(getApplicationContext(), EditorActivity.class);
+                intent.putExtra("clientID", id);
+                startActivity(intent);
                 break;
+
             case MENU_DELETE:
+                db.delete(CardHolders.DB.TABLE_NAME, "_id = ?", new String[]{String.valueOf(id)});
+                db.delete(CardHolders.DB.TABLE_DISCOUNT_SIZE, "_id = ?", new String[]{String.valueOf(id)});
+                Intent i = new Intent( this , this.getClass() );
+                finish();
+                this.startActivity(i);
                 break;
         }
 
@@ -106,11 +111,10 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-               int clientID = i;
-//            Toast.makeText(getApplication(), " " + i, Toast.LENGTH_LONG).show();
-                Intent intent = getIntent().setClass(getApplicationContext(), DiscountsActivity.class);
-                intent.putExtra("clientID", clientID);
-                startActivity(intent);
+               long clientID = cursor.getLong(cursor.getColumnIndex("_id"));
+               Intent intent = getIntent().setClass(getApplicationContext(), DiscountsActivity.class);
+               intent.putExtra("clientID", clientID);
+               startActivity(intent);
         }
     };
 
